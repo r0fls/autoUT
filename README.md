@@ -1,7 +1,7 @@
 # autoUT
 Generate basic unit tests from working python code.
 
-What is this good for? Obviously not TDD.
+What is this good for? Not TDD.
 
 So far this creates a unit test file with skeleton tests. That is, they need the arguments and expected values filled in.
 
