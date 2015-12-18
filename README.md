@@ -7,4 +7,4 @@ Currently this creates a unit test file, given a python file, with skeleton test
 
 TO DO:
 - get argument types for each function
-- include class methods
+- initialize classes
