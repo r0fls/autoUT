@@ -21,12 +21,23 @@ def start(name,cls=False):
     else:
         return 'class Test_{0}_{1}(unittest.TestCase):\n\n'.format(name,cls)
  
-def autout_function(func, filename):
-    return '    def test_{1}(self):\n        '\
-                'self.assertEqual({0}.{1}(),)\n\n'.format(filename, func.name)
+def autout_function(func, filename, cls= False):
+    if not cls:
+        return '    def test_{1}(self):\n        '\
+                    'self.assertEqual({0}.{1}({2}),)\n\n'.format(filename, func.name, ','.join('' for i in range(len(func.args.args))))
+    else:
+        return '    def test_{1}(self):\n        '\
+                    'self.assertEqual({0}.{1}({2}),)\n\n'.format(filename, func.name, ','.join('' for i in range(len(func.args.args)-1)))
+
+def initialize(item, filename, cls):
+    if item.name == '__init__':
+        return '    instance = {0}.{1}()\n\n'.format(filename, cls.name)
+    else:
+        return autout_function(item, 'instance', cls)
+
 
 def autout_class(cls, filename):
-    return chain(start(filename, cls.name),(autout_function(item, filename) for item in cls.body if isinstance(item, ast.FunctionDef)))
+    return chain(start(filename, cls.name),(initialize(item, filename, cls) for item in cls.body if isinstance(item, ast.FunctionDef)))
  
 def autout(filename):
     tree = parse_ast(filename)
