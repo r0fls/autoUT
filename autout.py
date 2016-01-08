@@ -1,6 +1,15 @@
 import ast
 import sys
 from itertools import chain
+from os import walk
+from os.path import join
+
+def dir_iter(location):
+    files = []
+    for (dirpath, dirnames, filenames) in walk(location):
+        files.extend(map(lambda x: join(dirpath, x), filter(
+            lambda x: not x.startswith('.'), filenames)))
+    return files
 
 def parse_ast(filename):
     with open(filename, "rt") as file:
