@@ -2,7 +2,7 @@ import ast
 import sys
 from itertools import chain
 from os import walk
-from os.path import join
+from os.path import join, isdir
 
 def dir_iter(location):
     files = []
@@ -51,7 +51,7 @@ def autout_class(cls, filename):
 def autout(filename):
     tree = parse_ast(filename)
     filename = filename.replace('.py', '')
-    f = open('test_{}.py'.format(filename), 'w')
+    f = open('test_{}.py'.format(filename.replace('/','')), 'w')
     f.write(begin(filename))
     for item in top_level(tree.body):
         if isinstance(item, ast.ClassDef):
@@ -63,5 +63,10 @@ def autout(filename):
 
 
 if __name__ == "__main__":
-    for filename in sys.argv[1:]:
-        autout(filename)
+    if isdir(sys.argv[1]):
+        for f in dir_iter(sys.argv[1]):
+            if f.endswith('.py'):
+                autout(f)
+    else:
+        for filename in sys.argv[1:]:
+            autout(filename)
